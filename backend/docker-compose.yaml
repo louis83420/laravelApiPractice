@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+  web:
+    build:
+      context: ./lnmp
+    privileged: true
+    ports:
+      - 80:80
+      - 6001:6001
+    volumes:
+      - ./lnmp:/www
+      - ./lnmp/config/nginx/default.conf:/etc/nginx/sites-enabled/default
+    links:
+      - mysql
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.30
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:      
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: 123
+      
+      TZ: Asia/Taipei
+    ports:
+      - 3306:3306
+    # volumes:
+    #   #正式環境使
+    #   - mysqldata:/var/lib/mysql
+    #   - ./lnmp/mysql-dump:/docker-entrypoint-initdb.d
+
+volumes:
+  mysqldata:
