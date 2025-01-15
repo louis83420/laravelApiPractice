@@ -10,15 +10,13 @@ use App\Http\Controllers\ApiTestController;
 
 //測試
 Route::get('/test', [ApiTestController::class, 'apitest']);
-Route::get('/user/{id}', [UserController::class, 'getUser']);
-
 
 //商品
 Route::apiResource('products', ProductController::class);
 
-
-
-
+//測試用小工具拿資料表
 Route::get('/get-fields', [ApiFieldController::class, 'getFields']);
 
+//用戶
+Route::apiResource('users', UserController::class);
 

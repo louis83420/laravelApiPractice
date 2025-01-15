@@ -16,7 +16,17 @@ class ApiFieldController extends Controller
 
         }
         $columns = Schema::getColumnListing($tableName);
-            return response()->json(['field'=>$columns]);
+        // $requiredFields = [];
+        // foreach ($columns as $column) {
+        //     $details = Schema::getConnection()->getDoctrineColumn($tableName, $column);
+        //     if ($details->getNotnull()) {
+        //         $requiredFields[] = $column;
+        //     }
+        // }
+        return response()->json([
+            'field'=>$columns
+            // 'requiredFields'=>$requiredFields,
+        ]);
    }
 
 

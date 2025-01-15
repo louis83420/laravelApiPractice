@@ -31,7 +31,11 @@
       <h3>參數</h3>
       <div v-for="(field, index) in fields" :key="index">
         <label>{{ field }}</label>
-        <input v-model="params[field]" placeholder="輸入 {{ field }} 的值" />
+        <input v-model="params[field]" placeholder="輸入參數的值" />
+        <!-- <input
+          v-model="params[field]"
+          :placeholder="requiredFields.includes(field) ? '必填' : ''"
+        /> -->
       </div>
     </div>
 
@@ -76,6 +80,7 @@ export default {
               this.params[field] = '';
             });
             console.log('成功取得欄位資訊:', this.fields);
+            // console.log('成功取得欄位資訊:', this.requiredFields);
             alert(`成功取得資料表 "${this.tableName}" 的欄位資訊`);
           } else {
             throw new Error('回傳的資料格式不正確');

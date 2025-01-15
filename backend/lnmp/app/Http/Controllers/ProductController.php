@@ -23,6 +23,7 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|string',
             'description' => 'nullable|string',
+            'sku' => 'required|string|max:255',
         ]);
 
         $product = Product::create($request->all());
@@ -38,12 +39,18 @@ class ProductController extends Controller
     //  4. 更新產品
     public function update(Request $request, Product $product)
     {
+        $data = array_filter($request->all(), function ($value) {
+            return $value !== '' && $value !== null;
+        });
+
+        $request->replace($data);
         $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|integer|min:0',
-            'stock' => 'required|integer|min:0',
+            'name' => 'sometimes|string|max:255',
+            'price' => 'sometimes|integer|min:0',
+            'stock' => 'sometimes|integer|min:0',
             'image' => 'nullable|string',
             'description' => 'nullable|string',
+            'sku' => 'sometimes|string|max:255',
         ]);
 
         $product->update($request->all());
