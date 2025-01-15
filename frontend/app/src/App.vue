@@ -5,14 +5,13 @@ const route = useRoute()
 </script>
 
 <template>
-  <div v-if="route.path !== '/'">
+  <div v-if="!['/', '/login'].includes(route.path)">
     <header>
       <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/test-api">API Tester</RouterLink>
-        <RouterLink to="/products">Products</RouterLink>
+        <RouterLink to="/">API小工具</RouterLink>
+        <RouterLink to="/login">消費者登入</RouterLink>
+        
       </nav>
     </header>
   </div>

@@ -1,4 +1,11 @@
 <template>
+  <div>
+    <header>      
+      <nav>
+        <RouterLink to="/login">登入</RouterLink>        
+      </nav>
+    </header>
+  </div>
   <div class="api-tester">
     <h2>API 測試用</h2>
 
@@ -99,6 +106,10 @@ export default {
           method: this.method,
           url: this.url,
           data: parsedParams,
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json', 
+          },
         });
         this.response = res.data;
       } catch (error) {
