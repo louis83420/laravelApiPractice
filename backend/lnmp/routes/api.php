@@ -13,13 +13,13 @@ use App\Http\Controllers\AdminController;
 Route::get('/test', [ApiTestController::class, 'apitest']);
 
 //商品
-Route::apiResource('products', ProductController::class);
+// Route::apiResource('products', ProductController::class);
 
 //測試用小工具拿資料表
 Route::get('/get-fields', [ApiFieldController::class, 'getFields']);
 
 //用戶
-Route::apiResource('users', UserController::class);
+// Route::apiResource('users', UserController::class);
 
 // 消費者登入
 Route::post('/login', [AuthController::class, 'login']);
@@ -27,12 +27,13 @@ Route::post('/login', [AuthController::class, 'login']);
 // 管理員登入
 Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
 
-Route::middleware('auth:api')->group(function () {
-    Route::apiResource('products', ProductController::class);
-    Route::apiResource('users', UserController::class);
+// 一般用戶，使用 Sanctum
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [UserController::class, 'show']); // 取得自己的資料
 });
 
-
-Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-    Route::get('/admin/data', [AdminController::class, 'getAdminData']);
+// 管理員，使用 Passport
+Route::middleware(['auth:api', 'scope:admin'])->group(function () {
+    Route::apiResource('users', UserController::class); // 管理用戶資料
+    Route::apiResource('products', ProductController::class); // 管理商品資料
 });

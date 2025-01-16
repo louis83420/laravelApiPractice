@@ -30,7 +30,7 @@
             email: this.email,
             password: this.password,
           });
-          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('token', res.data.access_token);
           this.$router.push('/');
         } catch (error) {
           this.error = '登入失敗，請檢查帳號或密碼';

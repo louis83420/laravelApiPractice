@@ -45,7 +45,10 @@
         /> -->
       </div>
     </div>
-
+    <div>
+      <label for="token">Token</label>
+      <input id="token" type="text" v-model="token" placeholder="請輸入您的 Token">
+    </div>
     <!-- 發送按鈕 -->
     <button @click="sendRequest">發送</button>
 
@@ -100,16 +103,22 @@ export default {
 
     // 發送 API 請求的方法
     async sendRequest() {
+      
       try {
+        const headers = {};
+        if (this.token) {
+          headers['Authorization'] = `Bearer ${this.token}`;
+        }
         const parsedParams = this.params ? JSON.parse(JSON.stringify(this.params)) : {};
         const res = await axios({
           method: this.method,
           url: this.url,
           data: parsedParams,
-          headers: {
-            Authorization: `Bearer ${token}`, 
-            'Content-Type': 'application/json', 
-          },
+          headers,
+          // headers: {
+          //   Authorization: `Bearer ${token}`, 
+          //   'Content-Type': 'application/json', 
+          // },
         });
         this.response = res.data;
       } catch (error) {
