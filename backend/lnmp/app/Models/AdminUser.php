@@ -12,6 +12,7 @@ class AdminUser extends Authenticatable
     /** @use HasFactory<\Database\Factories\AdminUserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'users';
     /**
      * The attributes that are mass assignable.
      *

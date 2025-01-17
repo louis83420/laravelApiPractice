@@ -24,10 +24,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         // $this->registerPolicies();
 
-        // Passport::routes();
-         Passport::tokensCan([
+
+        Passport::tokensCan([
             'admin' => 'Access all user data',
-            'user' => 'Access own user data',
+            'read' => 'Read-only access to data',
+            'write' => 'Write access to data',
         ]);
     }
 }

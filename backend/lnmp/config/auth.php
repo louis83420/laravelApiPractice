@@ -47,7 +47,11 @@ return [
 
         'admin' => [
             'driver' => 'passport', // 管理員使用 Passport
-            'provider' => 'users',
+            'provider' => 'admin_users',
+        ],
+        'api_account' => [
+            'driver' => 'passport', // API帳號使用 Passport
+            'provider' => 'admin_users',
         ],
     ],
 
@@ -71,13 +75,12 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\User::class, // 普通用戶模型
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admin_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\AdminUser::class, // 管理員模型
+        ],
     ],
 
     /*

@@ -604,6 +604,7 @@ class ComposerStaticInitb38b34fcce53e7d0214858fa02777fdc
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\ApiFieldController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiFieldController.php',
         'App\\Http\\Controllers\\ApiTestController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiTestController.php',
+        'App\\Http\\Controllers\\Api\\AdminUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/AdminUserController.php',
         'App\\Http\\Controllers\\Api\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/UserController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',

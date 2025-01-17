@@ -6,7 +6,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ApiFieldController;
 use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\api\AdminUserController;
+use App\Http\Controllers\AdminAuthController;
 
 
 //測試
@@ -25,15 +26,29 @@ Route::get('/get-fields', [ApiFieldController::class, 'getFields']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // 管理員登入
-Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
+Route::post('/admin/login', [AdminAuthController::class, 'loginAdmin']);
 
-// 一般用戶，使用 Sanctum
+// 一般用戶路由（使用 Sanctum）
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', [UserController::class, 'show']); // 取得自己的資料
+    Route::get('/user', [UserController::class, 'show']);
+    Route::put('/user', [UserController::class, 'update']);
 });
 
-// 管理員，使用 Passport
-Route::middleware(['auth:api', 'scope:admin'])->group(function () {
-    Route::apiResource('users', UserController::class); // 管理用戶資料
-    Route::apiResource('products', ProductController::class); // 管理商品資料
+// 管理員路由（使用 Passport）
+Route::middleware(['auth:admin', 'scope:admin'])->group(function () {
+    Route::apiResource('users', AdminUserController::class);
+    Route::apiResource('products', ProductController::class);
+    // Route::get('api_users', [AdminUserController::class, 'index']);
 });
+
+
+Route::post('/oauth/token', [\Laravel\Passport\Http\Controllers\AccessTokenController::class, 'issueToken']);
+
+// API Account 專用路由，只能使用 index 和 store 方法
+Route::middleware(['auth:api_account', 'scope:read'])->group(function () {
+    Route::get('api_users', [AdminUserController::class, 'index']);
+});
+Route::middleware(['auth:api_account', 'scope:write'])->group(function () {
+    Route::post('api_users', [AdminUserController::class, 'store']);
+});
+

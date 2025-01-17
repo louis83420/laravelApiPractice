@@ -45,6 +45,32 @@
         /> -->
       </div>
     </div>
+    <!-- 新增三方 API 測試欄位 -->
+    <div>
+      <button @click="toggleThirdPartyFields">
+        {{ showThirdPartyFields ? '隱藏三方 API 請求參數' : '顯示三方 API 請求參數' }}
+      </button>
+    </div>
+    <div v-if="showThirdPartyFields">
+      <h3>三方 API 請求參數</h3>
+      <div>
+        <label for="grant_type">grant_type:</label>
+        <input v-model="thirdPartyParams.grant_type" type="text" placeholder="輸入 grant_type" />
+      </div>
+      <div>
+        <label for="client_id">client_id:</label>
+        <input v-model="thirdPartyParams.client_id" type="text" placeholder="輸入 client_id" />
+      </div>
+      <div>
+        <label for="client_secret">client_secret:</label>
+        <input v-model="thirdPartyParams.client_secret" type="password" placeholder="輸入 client_secret" />
+      </div>
+      <div>
+        <label for="scope">scope:</label>
+        <input v-model="thirdPartyParams.scope" type="text" placeholder="輸入 scope" />
+      </div>
+      <button @click="fetchAccessToken">取得 Access Token</button>
+    </div>
     <div>
       <label for="token">Token</label>
       <input id="token" type="text" v-model="token" placeholder="請輸入您的 Token">
@@ -72,10 +98,19 @@ export default {
       fields: [],
       params: {},
       response: null,
+      showThirdPartyFields: false,
+      thirdPartyParams: {
+      grant_type: '',
+      client_id: '',
+      client_secret: '',
+      scope: '',
+      },
     };
   },
   methods: {
-    
+      toggleThirdPartyFields() {        
+        this.showThirdPartyFields = !this.showThirdPartyFields;
+      },
       async fetchFields() {
         try {
           // 重用 sendRequest 來發送取得欄位的請求
@@ -123,6 +158,21 @@ export default {
         this.response = res.data;
       } catch (error) {
         this.response = error.response ? error.response.data : error.message;
+      }
+    },
+    async fetchAccessToken() {
+      try {
+        const res = await axios.post('http://localhost/api/oauth/token', {
+          grant_type: this.thirdPartyParams.grant_type,
+          client_id: this.thirdPartyParams.client_id,
+          client_secret: this.thirdPartyParams.client_secret,
+          scope: this.thirdPartyParams.scope,
+        });
+        this.response = res.data.access_token; 
+        alert('Access Token 獲取成功');
+      } catch (error) {
+        console.error('取得 Access Token 失敗:', error);
+        alert('取得 Access Token 失敗，請檢查參數是否正確');
       }
     },
   },
