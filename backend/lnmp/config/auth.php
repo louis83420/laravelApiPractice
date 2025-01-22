@@ -51,7 +51,7 @@ return [
         ],
         'api_account' => [
             'driver' => 'passport', // API帳號使用 Passport
-            'provider' => 'admin_users',
+            'provider' => 'api_clients',
         ],
     ],
 
@@ -81,6 +81,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\AdminUser::class, // 管理員模型
         ],
+        'api_clients' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ApiClient::class,
+    ],
+
     ],
 
     /*

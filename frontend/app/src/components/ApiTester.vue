@@ -76,7 +76,8 @@
       <input id="token" type="text" v-model="token" placeholder="請輸入您的 Token">
     </div>
     <!-- 發送按鈕 -->
-    <button @click="sendRequest">發送</button>
+    <button :disabled="loading" @click="sendRequest">發送</button>
+
 
     <!-- 回應結果 -->
     <div v-if="response">

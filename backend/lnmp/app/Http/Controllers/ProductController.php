@@ -10,6 +10,8 @@ class ProductController extends Controller
     //  1. 取得所有產品
     public function index()
     {
+        \Log::info('Auth User:', ['user' => auth()->user()]);
+        \Log::info('Token Scopes:', ['scopes' => auth()->user()->token()->scopes]);
         $products = Product::all();
         return response()->json($products);
     }

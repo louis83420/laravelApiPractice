@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\ProductController;
@@ -8,7 +8,7 @@ use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\api\AdminUserController;
 use App\Http\Controllers\AdminAuthController;
-
+use App\Http\Controllers\TestAuthController;
 
 //測試
 Route::get('/test', [ApiTestController::class, 'apitest']);
@@ -45,10 +45,9 @@ Route::middleware(['auth:admin', 'scope:admin'])->group(function () {
 Route::post('/oauth/token', [\Laravel\Passport\Http\Controllers\AccessTokenController::class, 'issueToken']);
 
 // API Account 專用路由，只能使用 index 和 store 方法
-Route::middleware(['auth:api_account', 'scope:read'])->group(function () {
-    Route::get('api_users', [AdminUserController::class, 'index']);
-});
-Route::middleware(['auth:api_account', 'scope:write'])->group(function () {
-    Route::post('api_users', [AdminUserController::class, 'store']);
+Route::middleware(['auth:api_account', 'scopes:read,write'])->group(function () {
+    Route::apiResource('users/out', AdminUserController::class);
+    Route::apiResource('products', ProductController::class);
+    // Route::get('api_users', [AdminUserController::class, 'index']);
 });
 

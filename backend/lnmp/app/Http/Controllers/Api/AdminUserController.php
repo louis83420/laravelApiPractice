@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AdminUser;
 
+
+
 class AdminUserController extends Controller
 {
     // 1. 取得所有使用者資料 (僅限管理員)
     public function index(Request $request)
     {
-        if (!$request->user()->tokenCan('admin') && !$request->user()->tokenCan('read')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
+
 
         $users = AdminUser::all();
         return response()->json($users);
@@ -22,65 +22,61 @@ class AdminUserController extends Controller
     // 2. 建立新使用者 (僅限管理員)
     public function store(Request $request)
     {
-        if (!$request->user()->tokenCan('admin') && !$request->user()->tokenCan('write')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
 
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admin_users',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:6',
         ]);
 
+
         $user = AdminUser::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
         ]);
 
         return response()->json($user, 201);
     }
 
     // 3. 取得單一使用者資料 (僅限管理員)
-    public function show(Request $request, AdminUser $adminUser)
+    public function show(Request $request, AdminUser $user)
     {
-        if (!$request->user()->tokenCan('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
-        return response()->json($adminUser);
+        return response()->json($user);
     }
 
     // 4. 更新使用者資料 (僅限管理員)
-    public function update(Request $request, AdminUser $adminUser)
+    public function update(Request $request, AdminUser $user)
     {
-        if (!$request->user()->tokenCan('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
 
+
+        // 驗證輸入
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:admin_users,email,' . $adminUser->id,
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'sometimes|string|min:6',
+            'email_verified_at' => 'nullable|date',
+            'remember_token' => 'nullable|string|max:100',
+            'role' => 'nullable|string|max:255',
         ]);
 
+        // 如果有提供 password，進行加密處理
         if (isset($validated['password'])) {
             $validated['password'] = bcrypt($validated['password']);
         }
 
-        $adminUser->update($validated);
+        // 更新用戶資料
+        $user->update($validated);
 
-        return response()->json($adminUser);
+        return response()->json($user);
     }
 
     // 5. 刪除使用者 (僅限管理員)
-    public function destroy(Request $request, AdminUser $adminUser)
+    public function destroy(Request $request, AdminUser $user)
     {
-        if (!$request->user()->tokenCan('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
 
-        $adminUser->delete();
-        return response()->json(null, 204);
+
+        $user->delete();
+        return response()->json(['message' => 'User deleted successfully'], 200);
     }
 }
