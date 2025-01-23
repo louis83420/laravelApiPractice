@@ -69,6 +69,12 @@
         <label for="scope">scope:</label>
         <input v-model="thirdPartyParams.scope" type="text" placeholder="輸入 scope" />
       </div>
+      <div v-if="thirdPartyParams.grant_type === 'password'">
+        <label for="email">email:</label>
+        <input v-model="thirdPartyParams.email" type="text" placeholder="輸入 email" />
+        <label for="password">password:</label>
+        <input v-model="thirdPartyParams.password" type="password" placeholder="輸入 password" />
+      </div>
       <button @click="fetchAccessToken">取得 Access Token</button>
     </div>
     <div>
@@ -163,12 +169,19 @@ export default {
     },
     async fetchAccessToken() {
       try {
-        const res = await axios.post('http://localhost/api/oauth/token', {
+        const data = {
           grant_type: this.thirdPartyParams.grant_type,
           client_id: this.thirdPartyParams.client_id,
           client_secret: this.thirdPartyParams.client_secret,
           scope: this.thirdPartyParams.scope,
-        });
+        };
+
+        if (this.thirdPartyParams.grant_type === 'password') {
+          data.email = this.thirdPartyParams.email;
+          data.password = this.thirdPartyParams.password;
+        }
+
+        const res = await axios.post('http://localhost/api/oauth/token', data);
         this.response = res.data.access_token; 
         alert('Access Token 獲取成功');
       } catch (error) {

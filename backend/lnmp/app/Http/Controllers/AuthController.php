@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-
+use Laravel\Sanctum\HasApiTokens;
 
 class AuthController extends Controller
 {
@@ -40,6 +40,12 @@ class AuthController extends Controller
 
         return response()->json(['access_token' => $token], 200);
     }
-
+    public function authenticateToken()
+    {
+        \Log::channel('passport')->info('Token Debug', [
+            'token' => request()->bearerToken(),
+            'guard' => 'api_account'
+        ]);
+    }
 
 }

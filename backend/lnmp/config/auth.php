@@ -40,7 +40,7 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'api' => [
+        'users' => [
             'driver' => 'sanctum', // 消費者使用 Sanctum
             'provider' => 'users',
         ],
@@ -49,10 +49,7 @@ return [
             'driver' => 'passport', // 管理員使用 Passport
             'provider' => 'admin_users',
         ],
-        'api_account' => [
-            'driver' => 'passport', // API帳號使用 Passport
-            'provider' => 'api_clients',
-        ],
+
     ],
 
     /*
@@ -75,16 +72,13 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class, // 普通用戶模型
+            'model' => App\Models\User::class, // 普通使用sanctum用戶模型
         ],
         'admin_users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\AdminUser::class, // 管理員模型
+            'model' => App\Models\AdminUser::class, // 管理員使用passport模型
         ],
-        'api_clients' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\ApiClient::class,
-    ],
+
 
     ],
 

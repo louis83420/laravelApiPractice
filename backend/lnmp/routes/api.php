@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ApiFieldController;
 use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\api\AdminUserController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\TestAuthController;
+use Laravel\Passport\Http\Middleware\CheckClientCredentials;
+use App\Http\Controllers\AuthV2Controller;
+
 
 //測試
 Route::get('/test', [ApiTestController::class, 'apitest']);
@@ -29,7 +31,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/admin/login', [AdminAuthController::class, 'loginAdmin']);
 
 // 一般用戶路由（使用 Sanctum）
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:users')->group(function () {
     Route::get('/user', [UserController::class, 'show']);
     Route::put('/user', [UserController::class, 'update']);
 });
@@ -44,10 +46,26 @@ Route::middleware(['auth:admin', 'scope:admin'])->group(function () {
 
 Route::post('/oauth/token', [\Laravel\Passport\Http\Controllers\AccessTokenController::class, 'issueToken']);
 
-// API Account 專用路由，只能使用 index 和 store 方法
-Route::middleware(['auth:api_account', 'scopes:read,write'])->group(function () {
-    Route::apiResource('users/out', AdminUserController::class);
-    Route::apiResource('products', ProductController::class);
-    // Route::get('api_users', [AdminUserController::class, 'index']);
+//API Account 專用路由，只能使用 index 和 store 方法
+
+Route::middleware([CheckClientCredentials::class])->group(function () {
+    // 針對有 'read' scope 的操作
+    Route::middleware('client_scope:read')->group(function () {
+        Route::get('/apiuser', [AdminUserController::class, 'index']);
+        Route::get('/apiuser/{id}', [AdminUserController::class, 'show']);
+
+        Route::get('/productsout', [ProductController::class, 'index']);
+        Route::get('/productsout/{id}', [ProductController::class, 'show']);
+    });
+
+    // 針對有 'write' scope 的操作
+    Route::middleware('client_scope:write')->group(function () {
+        Route::post('/apiuser', [AdminUserController::class, 'store']);
+        Route::post('/productsout', [ProductController::class, 'store']);
+    });
 });
+
+
+Route::post('/v2/login', [AuthV2Controller::class, 'login']);
+
 
