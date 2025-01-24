@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header>      
+    <header class="api-test-top">      
       <nav>
         <RouterLink to="/login">登入</RouterLink>        
       </nav>
@@ -194,10 +194,22 @@ export default {
 </script>
 
 <style scoped>
+
+.api-test-top{
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translateZ(0);
+  z-index: 300;
+}
+  
+
+
 .api-tester {
   height: 100vh;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
 }
 
 .url-input {
