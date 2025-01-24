@@ -8,8 +8,7 @@ use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminAuthController;
-use Laravel\Passport\Http\Middleware\CheckClientCredentials;
-use App\Http\Controllers\AuthV2Controller;
+
 
 
 //測試
@@ -48,7 +47,7 @@ Route::post('/oauth/token', [\Laravel\Passport\Http\Controllers\AccessTokenContr
 
 //API Account 專用路由，只能使用 index 和 store 方法
 
-Route::middleware([CheckClientCredentials::class])->group(function () {
+Route::middleware(['auth.admin'])->group(function () {
     // 針對有 'read' scope 的操作
     Route::middleware('client_scope:read')->group(function () {
         Route::get('/apiuser', [AdminUserController::class, 'index']);
@@ -58,7 +57,7 @@ Route::middleware([CheckClientCredentials::class])->group(function () {
         Route::get('/productsout/{id}', [ProductController::class, 'show']);
     });
 
-    // 針對有 'write' scope 的操作
+    // 針對有 'write' scope 的操作(Client Credentials Grant)
     Route::middleware('client_scope:write')->group(function () {
         Route::post('/apiuser', [AdminUserController::class, 'store']);
         Route::post('/productsout', [ProductController::class, 'store']);
@@ -66,6 +65,12 @@ Route::middleware([CheckClientCredentials::class])->group(function () {
 });
 
 
-Route::post('/v2/login', [AuthV2Controller::class, 'login']);
 
 
+Route::middleware(['auth.admin'])->group(function () {
+    Route::get('/useronly', [UserController::class, 'show']);
+    Route::put('/useronly', [UserController::class, 'update']);
+
+    Route::get('/productsouts', [ProductController::class, 'index']);
+    Route::get('/productsouts/{id}', [ProductController::class, 'show']);
+    });

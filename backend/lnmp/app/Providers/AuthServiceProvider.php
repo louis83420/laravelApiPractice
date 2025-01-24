@@ -30,6 +30,6 @@ class AuthServiceProvider extends ServiceProvider
             'read' => 'Read-only access to data',
             'write' => 'Write access to data',
         ]);
-
+        Passport::enablePasswordGrant();
     }
 }
