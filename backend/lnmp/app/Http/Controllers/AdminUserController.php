@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AdminUser;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport;
 
 class AdminUserController extends Controller
 {
@@ -84,4 +87,24 @@ class AdminUserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
+
+    // 下載用戶excel
+    public function export()
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        // 驗證檔案
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
+
+        // 執行匯入
+        Excel::import(new UsersImport, $request->file('file'));
+
+        return back()->with('success', '資料匯入成功！');
+    }
+
 }

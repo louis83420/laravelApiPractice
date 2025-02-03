@@ -64,6 +64,8 @@ Route::middleware(['auth.admin'])->group(function () {
     });
 });
 
+Route::get('/export-users', [AdminUserController::class, 'export']);
+Route::post('/import-users', [AdminUserController::class, 'import']);
 
 
 

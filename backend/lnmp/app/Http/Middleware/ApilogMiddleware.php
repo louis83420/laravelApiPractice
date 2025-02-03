@@ -37,6 +37,6 @@ class ApilogMiddleware
             'excuteTime' => number_format($executeTime, 3) . ' second',
         ]);
 
-        return $response; // 只返回一次 $response
+        return $response;
     }
 }
