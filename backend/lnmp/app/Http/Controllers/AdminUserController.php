@@ -7,6 +7,7 @@ use App\Models\AdminUser;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
+use Illuminate\Support\Facades\Log;
 
 class AdminUserController extends Controller
 {
@@ -102,9 +103,18 @@ class AdminUserController extends Controller
         ]);
 
         // 執行匯入
-        Excel::import(new UsersImport, $request->file('file'));
+        try {
+            Excel::import(new UsersImport, $request->file('file'));
+            return response()->json(['message' => '匯入成功'], 200);
+        } catch (\Exception $exception) { // 用更清楚的名稱
+            Log::error('匯入失敗: ' . $exception->getMessage());
 
-        return back()->with('success', '資料匯入成功！');
+            return response()->json([
+                'error' => '匯入失敗，請檢查 CSV 格式或聯繫管理員。',
+                'details' => $exception->getMessage(),
+            ], 500);
+        }
+
     }
 
 }
