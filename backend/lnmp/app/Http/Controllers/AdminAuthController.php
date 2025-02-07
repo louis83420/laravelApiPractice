@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AdminUser;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class AdminAuthController extends Controller
@@ -12,10 +14,26 @@ class AdminAuthController extends Controller
     // 管理員登入
     public function loginAdmin(Request $request)
     {
-        $request->validate([
+        // $request->validate([
+        //     'email' => 'required|email',
+        //     'password' => 'required',
+        // ]);
+        // 試試看手動驗證
+
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required|min:3',
         ]);
+
+        //  如果驗證失敗
+        if ($validator->fails()) {
+            return ex_response()->validator($validator->errors());
+        }
+
+        // if($validator->fails()){
+        //     return ex_response()->validator($validator->messages());
+        // }
+
 
         // 查找管理員
         $admin = AdminUser::where('email', $request->email)

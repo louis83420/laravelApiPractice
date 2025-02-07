@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use Laravel\Passport\Http\Controllers\AuthorizationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+// routes/web.php
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/oauth/authorize', [AuthorizationController::class, 'authorize']);
+    Route::post('/oauth/authorize', [AuthorizationController::class, 'authorize']);
+});
+

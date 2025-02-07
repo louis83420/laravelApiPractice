@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+
 use Laravel\Sanctum\HasApiTokens;
 
 class AuthController extends Controller
@@ -46,6 +48,25 @@ class AuthController extends Controller
             'token' => request()->bearerToken(),
             'guard' => 'api_account'
         ]);
+    }
+
+    public function handleProviderCallback(Request $request)
+    {
+        // 確保有收到 `code`
+        if (!$request->has('code')) {
+            return response()->json(['error' => 'Authorization code is missing'], 400);
+        }
+
+        // 交換 Access Token
+        $response = Http::asForm()->post('http://localhost/oauth/token', [
+            'grant_type'    => 'authorization_code',
+            'client_id'     => env('OAUTH_CLIENT_ID'),
+            'client_secret' => env('OAUTH_CLIENT_SECRET'),
+            'redirect_uri'  => 'http://localhost/auth/callback',
+            'code'          => $request->code,
+        ]);
+
+        return response()->json($response->json());
     }
 
 }

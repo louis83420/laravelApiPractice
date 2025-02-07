@@ -8,6 +8,14 @@ use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\OAuthClientController;
+use App\Http\Controllers\CustomAuthorizationController;
+use Laravel\Passport\Http\Controllers\{
+    AuthorizationController,
+    ApproveAuthorizationController,
+    DenyAuthorizationController
+
+};
 
 
 
@@ -76,3 +84,33 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::get('/productsouts', [ProductController::class, 'index']);
     Route::get('/productsouts/{id}', [ProductController::class, 'show']);
     });
+
+
+
+Route::middleware('auth:admin')->group(function () {
+    Route::post('/oauth/clients', [OAuthClientController::class, 'store']);
+});
+
+
+Route::post('/auth/callback', [AuthController::class, 'handleProviderCallback']);
+
+
+// OAuth 核心路由
+Route::group(['prefix' => 'oauth'], function () {
+    
+
+    Route::post('/authorize', [ApproveAuthorizationController::class, 'approve'])
+          ->middleware('auth:custom_guard');
+
+    Route::delete('/authorize', [DenyAuthorizationController::class, 'deny'])
+          ->middleware('auth:custom_guard');
+
+    Route::get('/authorize', [CustomAuthorizationController::class, 'authorize'])
+            ->middleware(['api', 'passport:custom_guard']);
+
+    Route::post('/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
+});
+
+// 第三方客戶端註冊 API
+Route::post('/clients', [OAuthClientController::class, 'store'])
+     ->middleware('auth:custom_guard');

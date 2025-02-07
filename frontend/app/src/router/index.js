@@ -6,6 +6,8 @@ import ApiTester from '../components/ApiTester.vue'
 import Login from '../components/Login.vue'
 import AdminLogin from '../components/AdminLogin.vue'
 import AdminDashboard from '@/views/AdminDashboard.vue'
+import OAuthRegister from '../components/OAuthRegister.vue'
+import AuthCallback from '@/views/AuthCallback.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -47,6 +49,21 @@ const router = createRouter({
       name: 'admin-dashboard',
       component: AdminDashboard,
       meta: { requiresAuth: true },
+    },
+    {
+      path: '/register',
+      name: 'OAuthRegister',
+      component: OAuthRegister,
+    },
+    { 
+      path: '/auth/callback', 
+      name: 'AuthCallback', 
+      component: AuthCallback 
+    },
+    {
+      path: '/auth/callback',
+      name: 'oauthCallback',
+      component: () => import('../views/OAuthCallback.vue'), // 將會創建此組件來處理授權碼
     },
   ],
 })

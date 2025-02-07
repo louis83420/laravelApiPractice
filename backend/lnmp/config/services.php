@@ -35,6 +35,13 @@ return [
     'login_endpoint' => env('PASSPORT_LOGIN_ENDPOINT'),
     ],
 
+    'localhost' => [
+        'client_id' => env('LOCALHOST_CLIENT_ID'),
+        'client_secret' => env('LOCALHOST_CLIENT_SECRET'),
+        'redirect' => env('LOCALHOST_REDIRECT_URI'),
+    ],
+
+
 
 
 ];

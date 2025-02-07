@@ -35,9 +35,9 @@
           localStorage.setItem('access_token', res.data.access_token);
   
           // 導向管理員頁面
-          this.$router.push('/admin');
+          this.$router.push('/');
         } catch (error) {
-          this.error = '登入失敗，請檢查帳號或密碼';
+          this.error = '登入失敗，請檢查帳號或密碼3';
         }
       },
     },

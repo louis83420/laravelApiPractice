@@ -5,7 +5,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <div v-if="!['/', '/login'].includes(route.path)">
+  <div v-if="!['/', '/login','/register'].includes(route.path)">
     <header>
       <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
       <nav>
